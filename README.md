@@ -1,5 +1,5 @@
-# streamlit-mt5-results
-Web app mostrando gráficos com resultados de operações no mercado financeiro usando metatrader 5
+# streamlit-yfinance-range-hist
+Histograma de Web app mostrando gráficos com resultados de operações no mercado financeiro usando metatrader 5
 
 Ingredientes principais: Python, Metatrader 5 e Streamlit
 
@@ -10,7 +10,7 @@ Aplicativo recupera os dados de operações realizadas e as exibe de forma inter
 Para acionar o servidor **streamlit** em `localhost:85XX`
 
 ```
-streamlit run app.py
+streamlit run app-st.py
 ``` 
 ou
 

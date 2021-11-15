@@ -3,7 +3,7 @@ __pycache__/
 appznoix/__pycache__/
 *.py[cod]
 *$py.class
-
+app.py
 # C extensions
 *.so
 
