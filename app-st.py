@@ -75,5 +75,10 @@ s = app_header()
 df = yf_dataframe(symbol=s)
 # Se os dados estiverem corretos, exibe o histograma correspondente
 if cooking(df):
-    fig = px.histogram(df, x="Range")
+    fig = px.histogram(df,
+                       x="Range",
+                       nbins=250,
+                       labels={'Range': 'Variação diária',
+                               'Count': 'Frequência'}
+                       )
     st.plotly_chart(fig)
