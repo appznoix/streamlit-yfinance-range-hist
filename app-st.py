@@ -14,7 +14,7 @@ import plotly.express as px
 
 @st.cache(allow_output_mutation=True)
 def yf_get_data(tickers, period, interval):
-    '''Puxa os dados do Yahoo Finance'''
+    '''Puxa os dados do (get symbol data from) Yahoo Finance '''
     return yf.download(tickers=tickers, period=period, interval=interval)
 
 
