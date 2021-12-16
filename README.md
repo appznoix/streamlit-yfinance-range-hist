@@ -1,7 +1,7 @@
 # streamlit-yfinance-range-hist
-Histograma de Web app mostrando gráficos com resultados de operações no mercado financeiro usando metatrader 5
+## Histograma que mostra a frequência por range diário dos ultimos 2 anos ##
 
-Ingredientes principais: Python, Metatrader 5 e Streamlit
+Ingredientes principais: Python e Streamlit
 
 # Curva de resultados de operações no mercado financeiro #
 
