@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 appznoix/__pycache__/
+origem/
 *.py[cod]
 *$py.class
 app.py
