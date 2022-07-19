@@ -10,6 +10,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import plotly.express as px
+from comps.page_header import page_header    # cabeçalho da página
 
 ###################################################################
 # Funções / Functions                                             #
@@ -82,7 +83,6 @@ def yf_safe_dataframe(symbol='usdbrl=x', period='1y', interval='1d'):
 def cooking_range(df):
     '''Executa o tratamento dos dados. Neste caso, cria a coluna de ranges e elimina as colunas desnecessárias'''
     if len(df) > 0:
-        # st.write(f'Dados coletados. Processando tipo {calculation}')
         # 1. pega os valor de máxima e mínima do dia
         # 2. Compara
         if 'High' in df:
@@ -90,7 +90,6 @@ def cooking_range(df):
             df['Range'] = abs(df.High - df.Low)
             df.drop(['Open', 'High', 'Low', 'Close',
                      'Adj Close', 'Volume'], axis=1, inplace=True)
-        # st.write(df.head())
     else:
         st.write('Ops! Não achei as informações deste ativo. O código pode ter mudado ou ter sido desativado. Confira e tente novamente.')
         return False
@@ -157,46 +156,31 @@ def app_header():
 # Código Principal / Main Code                                    #
 ###################################################################
 def main():
+    # cabeçalho da página
+    page_header()
+
     # Mostra o cabeçalho da página
     symbol, display = app_header()
     df = pd.DataFrame()
     # Busca os dados e cria dataframe    
     #with st.spinner(text="Checando código do ativo. Pode demorar alguns minutos"):
 
-    safe_symbol,symbol = yf_safe_symbol(symbol)
+    safe_symbol,symbol = yf_safe_symbol(symbol) # verifica existencia do simbolo
 
-
-    if safe_symbol:
+    if safe_symbol: # se existir, busca os dados do ativo e cria o DataFrame
         with st.spinner(text="Aguarde coleta dos dados. Pode demorar alguns minutos"):
             df = yf_safe_dataframe(symbol=symbol)
-
-
-    if cooking_range(df):
+    
+    if cooking_range(df): # se o dataframe não estiver vazio, processa os dados e exibe o gráfico
         fig = px.histogram(df,
                         x=display,
                         nbins=250,
                         labels={'Range': 'Variação diária',
                                 'Range_pct': 'Variação diária',
                                 'count': 'Frequência'}
-                        )
-        
-
-    # with st.spinner(text="Aguarde coleta dos dados. Pode demorar alguns minutos"):
-    #     df = yf_dataframe(symbol=symbol)
-
-    # #st.write(df.head())
-    # if cooking_range(df):
-    #     fig = px.histogram(df,
-    #                     x=display,
-    #                     nbins=250,
-    #                     labels={'Range': 'Variação diária',
-    #                             'Range_pct': 'Variação diária',
-    #                             'count': 'Frequência'}
-    #                     )
-        
+                        )        
         st.plotly_chart(fig)
-    else:
-        st.write('Faio!')
+    
 
 if __name__ == "__main__":
     main()

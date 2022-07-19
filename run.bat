@@ -6,6 +6,6 @@ streamlit run %1
 goto end
 
 :blank
-streamlit run app-st.py
+streamlit run Home.py
 
 :end
