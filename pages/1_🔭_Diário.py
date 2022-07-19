@@ -1,11 +1,11 @@
 ###################################################################
 # Imports e inits                                                 #
 ###################################################################
-from os import symlink
-from symtable import Symbol
-from matplotlib.pyplot import title
+#from os import symlink
+#from symtable import Symbol
+#from matplotlib.pyplot import title
 import streamlit as st
-from sympy import RegularPolygon, symbols
+#from sympy import RegularPolygon, symbols
 import yfinance as yf
 import pandas as pd
 import numpy as np

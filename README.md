@@ -10,7 +10,7 @@ Aplicativo recupera as máximas e mínimas diárias e as exibe de forma interati
 Para acionar o servidor **streamlit** em `localhost:85XX`:
 
 ```
-streamlit run app-st.py
+streamlit run Home.py
 ``` 
 ou simplesmente
 
