@@ -4,7 +4,7 @@
 #from os import symlink
 #from symtable import Symbol
 #from matplotlib.pyplot import title
-from matplotlib.pyplot import show
+#from matplotlib.pyplot import show
 import streamlit as st
 #from sympy import RegularPolygon, symbols
 import yfinance as yf
