@@ -4,13 +4,14 @@
 #from os import symlink
 #from symtable import Symbol
 #from matplotlib.pyplot import title
+from matplotlib.pyplot import show
 import streamlit as st
 #from sympy import RegularPolygon, symbols
 import yfinance as yf
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from comps.page_header import page_header    # cabeçalho da página
+from comps.app_header import app_header    # cabeçalho da página
 
 ###################################################################
 # Funções / Functions                                             #
@@ -28,49 +29,46 @@ def yf_get_data(tickers, period, interval):
     '''Agrega os dados do (get symbol data from) Yahoo Finance '''
     return yf.download(tickers=tickers, period=period, interval=interval)
 
-
+foo= '''
 @st.cache
 def yf_is_symbol(symbol):
-    '''Retorna true se Yahoo Finance tem informações sobre o ativo *symbol*'''
+    \'''Retorna true se Yahoo Finance tem informações sobre o ativo *symbol*\'''
     #with st.spinner(text="Localizando informações do ativo. Aguarde por gentileza. Pode demorar alguns minutos"):
     s = yf.Ticker(symbol)    
     return not (s.info['regularMarketPrice'] == None)
 
 
 def yf_dataframe(symbol='usdbrl=x', period='1y', interval='1d'):
-    '''Prepara os dados e retorna dataframe com dados do Yahoo Finance sobre o ativo symbol'''    
+    \'''Prepara os dados e retorna dataframe com dados do Yahoo Finance sobre o ativo symbol\'''
     symbol = symbol + '.sa' if not yf_is_symbol(symbol) else symbol    
     d = pd.DataFrame() if not yf_is_symbol(
         symbol) else yf_get_data(symbol, period, interval)
     return d
-
+'''
 #############
 
 @st.cache(show_spinner=False)
 def yf_safe_is_symbol(symbol):
     '''Retorna true se Yahoo Finance tem informações sobre o ativo *symbol*'''
-    with st.spinner(text="Localizando informações do ativo. Aguarde por gentileza. Pode demorar alguns minutos"):
-        s = yf.Ticker(symbol)
+    #with st.spinner(text="Obtendo informações do ativo. Aguarde por gentileza. Pode demorar alguns minutos"):
+    s = yf.Ticker(symbol)
     return not (s.info['regularMarketPrice'] == None)
 
-
+@st.cache(show_spinner=False)
 def yf_sa_symbol(symbol):
     '''Verifica se o simbolo existe e adiciona .sa caso não'''    
-    with st.spinner(text='buscando simbolo sem SA'):
+    with st.spinner(text=f'Buscando {symbol.upper()}'):
         is_fine =  yf_safe_is_symbol(symbol)
 
-    symbol = symbol if is_fine else symbol + '.SA'
+    symbol = symbol if is_fine else symbol.upper() + '.SA'
     return symbol, is_fine
-    #return symbol if yf_safe_is_symbol(symbol) else symbol + '.sa'
+
 
 def yf_safe_symbol(symbol):
     symbol, found = yf_sa_symbol(symbol)
-    is_fine = found
     if not found:
-        with st.spinner(text='Buscando simbolo com SA'):
-            #is_fine =  yf_safe_is_symbol(symbol)
+        with st.spinner(text=f'Buscando {symbol}'):
             found =  yf_safe_is_symbol(symbol)
-    #return is_fine, symbol
     return found, symbol
 
 
@@ -91,7 +89,7 @@ def cooking_range(df):
             df.drop(['Open', 'High', 'Low', 'Close',
                      'Adj Close', 'Volume'], axis=1, inplace=True)
     else:
-        st.write('Ops! Não achei as informações deste ativo. O código pode ter mudado ou ter sido desativado. Confira e tente novamente.')
+        st.write('Ops! Não encontramos informações deste ativo. O código pode não existir, ter sido mudado ou desativado. Confira e tente novamente.')
         return False
     df.head()
     return True
@@ -126,7 +124,7 @@ def format_link(text='', name='', url=''):
     return f'{text}[{name}]({url})'
 
 
-def app_header():
+def page_header():
     '''Apresenta o topo da página. Neste caso mostra entrada de código do ativo que será pesquisado'''
     options = {
         'Range': 'Númerica',
@@ -135,7 +133,7 @@ def app_header():
     # Entradas/sidebar:
     # Código do ativo
     symbol = st.sidebar.text_input(
-        'Informe o código do ativo: ', 'PETR4')
+        'Informe o código do ativo: ',"", placeholder= 'Ex: PETR4')
     st.sidebar.markdown(
         format_link('🍒 Use o formato ', 'Yahoo Finance',
                     'https://br.financas.yahoo.com'),
@@ -146,8 +144,11 @@ def app_header():
         ('Range', 'Range_pct'),
         format_func=lambda x: options.get(x),)
     # Informações sobre o contexto
-    st.title('Variação diária de preços (Range)')
-    st.write(f'Range {(options.get(display).lower())} de {symbol}', )
+    #st.write(        f'Range {(options.get(display).lower())} de {symbol.upper()}') 
+    if not symbol:
+        st.write(f'Informe o código do ativo que você quer ver na coluna lateral (toque no > que aparece no canto esquerdo superior)')
+    else:
+        st.title(f'Variação {(options.get(display).lower())} diária (range) de {symbol.upper()} ')
 
     return symbol, display
 
@@ -156,31 +157,31 @@ def app_header():
 # Código Principal / Main Code                                    #
 ###################################################################
 def main():
-    # cabeçalho da página
-    page_header()
+    # cabeçalho do app
+    app_header()
 
     # Mostra o cabeçalho da página
-    symbol, display = app_header()
-    df = pd.DataFrame()
+    symbol, display = page_header() #symbol é o ativo, display é o formato númerico ou percentual
+    if not not symbol:
     # Busca os dados e cria dataframe    
-    #with st.spinner(text="Checando código do ativo. Pode demorar alguns minutos"):
+        df = pd.DataFrame()
+        #with st.spinner(text="Checando código do ativo. Pode demorar alguns minutos"):
+        safe_symbol,symbol = yf_safe_symbol(symbol) # verifica existencia do simbolo
 
-    safe_symbol,symbol = yf_safe_symbol(symbol) # verifica existencia do simbolo
-
-    if safe_symbol: # se existir, busca os dados do ativo e cria o DataFrame
-        with st.spinner(text="Aguarde coleta dos dados. Pode demorar alguns minutos"):
-            df = yf_safe_dataframe(symbol=symbol)
-    
-    if cooking_range(df): # se o dataframe não estiver vazio, processa os dados e exibe o gráfico
-        fig = px.histogram(df,
-                        x=display,
-                        nbins=250,
-                        labels={'Range': 'Variação diária',
-                                'Range_pct': 'Variação diária',
-                                'count': 'Frequência'}
-                        )        
-        st.plotly_chart(fig)
-    
+        if safe_symbol: # se existir, busca os dados do ativo e cria o DataFrame
+            with st.spinner(text="Aguarde coleta dos dados. Pode demorar alguns minutos"):
+                df = yf_safe_dataframe(symbol=symbol)
+        
+        if cooking_range(df): # se o dataframe não estiver vazio, processa os dados e exibe o gráfico
+            fig = px.histogram(df,
+                            x=display,
+                            nbins=250,
+                            labels={'Range': 'Variação diária',
+                                    'Range_pct': 'Variação diária',
+                                    'count': 'Frequência'}
+                            )        
+            st.plotly_chart(fig)
+        
 
 if __name__ == "__main__":
     main()

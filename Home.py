@@ -1,19 +1,20 @@
 import streamlit as st
 
-from comps.page_header import page_header
-page_header()
+from comps.app_header import app_header
+app_header()
 
 #st.title('Ranginator')
 #st.image()
-st.header('Estudo sobre os movimentos do preço')
-st.text('Diário: valores e percentuais dos movimentos completos no dia a dia.')
-st.text('Intraday: valores e percentuais dos movimentos em diversas frações de tempo.')
+st.header('Estudo do movimento do preço')
+st.text('Home: Esta página.')
+st.text('Daily: valores e percentuais dos movimentos diários completos.')
+st.text('Intraday: valores e percentuais dos movimentos em diversas frações de tempo menor que um dia.')
 st.header('Pra que?')
-st.text('Avaliar movimento dos preços e entender o comportamento do ativo.')
+st.text('Avaliar os movimentos dos preços e entender o comportamento do ativo para planejamento operacional.')
 st.text('')
 st.text('')
 st.text('')
 st.text('')
 st.text('')
-st.write('ATENÇÃO: Este conteúdo é somente para informação e não constitue recomendação de investimento.')
-st.write('Investimentos envolvem riscos e a responsabilidade pelo resultado é toda do investidor.')
+st.write('Este conteúdo não é recomendação de investimento e serve apenas como informação. Investimentos envolvem riscos. A responsabilidade pelo resultado é toda e somente do investidor.')
+

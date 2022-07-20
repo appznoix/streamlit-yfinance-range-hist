@@ -1,6 +1,6 @@
-from comps.page_header import page_header
+from comps.app_header import app_header
 
-page_header()
+app_header()
 
 
 "Em breve!"
