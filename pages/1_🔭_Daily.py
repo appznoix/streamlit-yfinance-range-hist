@@ -146,7 +146,8 @@ def page_header():
     # Informações sobre o contexto
     #st.write(        f'Range {(options.get(display).lower())} de {symbol.upper()}') 
     if not symbol:
-        st.write(f'Informe o código do ativo que você quer ver na coluna lateral (toque no > que aparece no canto esquerdo superior)')
+        st.markdown('Na coluna à esquerda, informe o código do ativo que você quer ver.')
+        st.markdown('Toque no botão `>` que aparece no topo, para ver a coluna lateral.')
     else:
         st.title(f'Variação {(options.get(display).lower())} diária (range) de {symbol.upper()} ')
 
