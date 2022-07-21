@@ -1,12 +1,8 @@
 ###################################################################
 # Imports e inits                                                 #
 ###################################################################
-#from os import symlink
-#from symtable import Symbol
-#from matplotlib.pyplot import title
-#from matplotlib.pyplot import show
+from time import time
 import streamlit as st
-#from sympy import RegularPolygon, symbols
 import yfinance as yf
 import pandas as pd
 import numpy as np
@@ -94,9 +90,9 @@ def cooking_range(df):
     df.head()
     return True
 
-
+baz= '''
 def cooking(df, calculation):
-    '''Executa o tratamento dos dados. Neste caso, cria a coluna de ranges e elimina as colunas desnecessárias'''
+    \'''Executa o tratamento dos dados. Neste caso, cria a coluna de ranges e elimina as colunas desnecessárias\'''
     if len(df) > 0:
         st.write(f'Dados coletados. Processando tipo {calculation}')
         # 1. pega os valor de máxima e mínima do dia
@@ -117,7 +113,7 @@ def cooking(df, calculation):
         return False
     df.head()
     return True
-
+'''
 
 def format_link(text='', name='', url=''):
     '''retorna f\'string com texto e link para url '''
@@ -130,6 +126,13 @@ def page_header():
         'Range': 'Númerica',
         'Range_pct': 'Percentual'
     }
+    valid_periods = {
+        '6mo' : 'Seis meses',
+        '1y' : 'Um ano',
+        '2y' : 'Dois anos',
+        '5y' : 'Cinco anos',
+        'ytd' : 'Este ano',
+    }
     # Entradas/sidebar:
     # Código do ativo
     symbol = st.sidebar.text_input(
@@ -138,6 +141,11 @@ def page_header():
         format_link('🍒 Use o formato ', 'Yahoo Finance',
                     'https://br.financas.yahoo.com'),
         unsafe_allow_html=True)
+    # Periodo de tempo considerado
+    time_limit = st.sidebar.radio(
+        "Consultar período de: ",
+        ('6mo', '1y', '2y', '5y', 'ytd', ),
+        format_func=lambda x: valid_periods.get(x),)
     # Seleção do modo de exibição
     display = st.sidebar.radio(
         "Exibir variação: ",
@@ -149,9 +157,9 @@ def page_header():
         st.markdown('Na coluna à esquerda, informe o código do ativo que você quer ver.')
         st.markdown('Toque no botão `>` que aparece no topo, para ver a coluna lateral.')
     else:
-        st.title(f'Variação {(options.get(display).lower())} diária (range) de {symbol.upper()} ')
+        st.title(f'Variação {(options.get(display).lower())} diária (range) de {symbol.upper()} no período de {valid_periods.get(time_limit).lower()}')
 
-    return symbol, display
+    return symbol, display, time_limit
 
 
 ###################################################################
@@ -162,7 +170,7 @@ def main():
     app_header()
 
     # Mostra o cabeçalho da página
-    symbol, display = page_header() #symbol é o ativo, display é o formato númerico ou percentual
+    symbol, display, time_limit = page_header() #symbol é o ativo, display é o formato númerico ou percentual
     if not not symbol:
     # Busca os dados e cria dataframe    
         df = pd.DataFrame()
@@ -171,7 +179,7 @@ def main():
 
         if safe_symbol: # se existir, busca os dados do ativo e cria o DataFrame
             with st.spinner(text="Aguarde coleta dos dados. Pode demorar alguns minutos"):
-                df = yf_safe_dataframe(symbol=symbol)
+                df = yf_safe_dataframe(symbol=symbol, period=time_limit)
         
         if cooking_range(df): # se o dataframe não estiver vazio, processa os dados e exibe o gráfico
             fig = px.histogram(df,
