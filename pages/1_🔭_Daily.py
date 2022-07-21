@@ -10,12 +10,7 @@ from comps.yf_appznoix import yf_safe_symbol, yf_safe_dataframe
 ###################################################################
 # Funções / Functions                                             #
 ###################################################################
-# Todos:
-# ✔ 1. adicionar valores em percentual 
-# 2. valores intraday
-# ✔ 4. definir periodos de valores
-# ✔ 3. site multi page
-# ✔ 5. otimizar código
+
 
 def cooking_range(df):
     '''Executa o tratamento dos dados. Neste caso, cria a coluna de ranges e elimina as colunas desnecessárias'''

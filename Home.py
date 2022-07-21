@@ -18,3 +18,11 @@ st.text('')
 st.text('')
 st.warning('Este conteúdo não é recomendação de investimento e serve apenas como informação. Investimentos envolvem riscos. A responsabilidade pelo resultado é toda e somente do investidor.')
 
+# Todos:
+# ✔ 1. adicionar valores em percentual 
+# ✔ 2. valores intraday
+# ✔ 4. definir periodos de valores
+# ✔ 3. site multi page
+# ✔ 5. otimizar código
+# 6. colocar o numero de itens do dataframe 
+# 7. fazer o numero de bins igual ao de linhas do dataframe

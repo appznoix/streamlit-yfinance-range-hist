@@ -95,7 +95,7 @@ def page_header():
         st.markdown('Na coluna à esquerda, informe o código do ativo que você quer ver.')
         st.markdown('Toque no botão `>` que aparece no topo, para ver a coluna lateral.')
     else:
-        st.title(f'Variação {(options.get(display).lower())} (range) de {symbol.upper()} no tempo gráfico de {valid_timeframes.get(time_frame).lower()}')
+        st.title(f'Variação {(options.get(display).lower())} (range) de {symbol.upper()} no tempo gráfico de {valid_timeframes.get(time_frame).lower()} pelo período de {valid_periods.get(time_limit).lower()}')
 
     return symbol, display, time_limit, time_frame
 
