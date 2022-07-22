@@ -1,50 +1,13 @@
 ###################################################################
 # Imports e inits                                                 #
 ###################################################################
-from time import time
-from prometheus_client import Summary
 import streamlit as st
-import pandas as pd
-import plotly.express as px
 from comps.app_header import app_header    # cabeçalho da página
-from comps.yf_appznoix import yf_safe_symbol, yf_safe_dataframe
-from comps.mix import format_link, chart_summary
+from comps.mix_vanilla import format_link
+from comps.mix_flavours import body_range_histogram
 ###################################################################
-# Funções / Functions                                             #
+# Funções personalizadas / Custom Functions                       #
 ###################################################################
-
-def cooking_range(df):
-    '''Executa o tratamento dos dados. Neste caso, cria a coluna de ranges e elimina as colunas desnecessárias'''
-    if len(df) > 0:
-        # 1. pega os valor de máxima e mínima do dia
-        # 2. Compara
-        if 'High' in df:
-            # cria colunas com valores que serão usados
-            df['Range_pct'] = (df.High/df.Low - 1) * 100
-            df['Range'] = abs(df.High - df.Low)
-            # elimina colunas desnecessárias
-            df.drop(['Open', 'High', 'Low', 'Close',
-                     'Adj Close', 'Volume'], axis=1, inplace=True)
-    else:
-        st.write('Ops! Não encontramos informações deste ativo. O código pode não existir, ter sido mudado ou desativado. Confira e tente novamente.')
-        return False
-    df.head()
-    return True
-
-# def format_link(text='', name='', url=''):
-#     '''retorna f\'string com texto e link para url '''
-#     return f'{text}[{name}]({url})'
-
-# def chart_summary(df, display):
-#     ''' Exibe um resumo dos dados e retorna o numero de raios do Histograma'''
-#     items = len(df.index)
-#     if display == 'Range_pct':
-#         bins_chart = len(df['Range_pct'].value_counts())
-#     else:
-#         bins_chart = len(df['Range'].value_counts())
-#     #bins_chart = df[display].value_counts()
-#     st.write(f'Foram encontrados {items} periodos com {bins_chart} valores distintos') 
-#     return bins_chart
 
 def page_header():
     '''Apresenta o topo da página. Neste caso mostra entrada de código do ativo que será pesquisado'''
@@ -68,7 +31,7 @@ def page_header():
                     'https://br.financas.yahoo.com'),
         unsafe_allow_html=True)
     # Periodo de tempo considerado
-    time_limit = st.sidebar.radio(
+    period = st.sidebar.radio(
         "Consultar período de: ",
         ('6mo', '1y', '2y', '5y', 'ytd', ),
         format_func=lambda x: valid_periods.get(x),)
@@ -78,15 +41,7 @@ def page_header():
         ('Range', 'Range_pct'),
         format_func=lambda x: options.get(x),)
     # Informações sobre o contexto
-    #st.write(        f'Range {(options.get(display).lower())} de {symbol.upper()}') 
-
-    # if not symbol:
-    #     st.markdown('Na coluna à esquerda, informe o código do ativo que você quer ver.')
-    #     st.markdown('Toque no botão `>` que aparece no topo, para ver a coluna lateral.')
-    # else:
-    #     st.title(f'Variação {(options.get(display).lower())} diária (range) de {symbol.upper()} no período de {valid_periods.get(time_limit).lower()}')
-
-    return symbol, display, time_limit, (f'Variação (range) {(options.get(display).lower())} diária de {symbol.upper()} no período de {valid_periods.get(time_limit).lower()}')
+    return symbol, display, period, '1d', (f'Variação (range) {(options.get(display).lower())} diária de {symbol.upper()} no período de {valid_periods.get(period).lower()}')
 
 ###################################################################
 # Código Principal / Main Code                                    #
@@ -94,37 +49,11 @@ def page_header():
 def main():
     # cabeçalho do app
     app_header()
-
     # Mostra o cabeçalho da página e mostra o formulário de detalhes do gráfico
-    symbol, display, time_limit, display_title = page_header() #symbol é o ativo, display é o formato númerico ou percentual
+    symbol, display, period, interval, display_title = page_header() #symbol é o ativo, display é o formato númerico ou percentual
+    # Corpo da página 
+    body_range_histogram(symbol, display, period, interval, display_title )
 
-    if not symbol:
-        st.markdown('Na coluna à esquerda, informe o código do ativo que você quer ver.')
-        st.markdown('Toque no botão `>` que aparece no topo, para ver a coluna lateral.')
-    else:
-    # Busca os dados e cria dataframe    
-    #if not not symbol: # processa o gráfico se algum ativo foi informado
-        df = pd.DataFrame()
-        
-        safe_symbol,symbol = yf_safe_symbol(symbol) # verifica existencia do simbolo informado
-
-        if safe_symbol: # se existir, busca os dados do ativo e cria o DataFrame
-            with st.spinner(text="Aguarde coleta dos dados. Pode demorar alguns minutos"):
-                df = yf_safe_dataframe(symbol=symbol, period=time_limit)
-        
-            if cooking_range(df): # se o dataframe não estiver vazio, processa os dados e exibe o gráfico
-                st.title(display_title)
-                bins_chart, summary = chart_summary(df, display)
-                st.write(summary)
-
-                fig = px.histogram(
-                    df,
-                    x=display,
-                    nbins=bins_chart,
-                    labels={'Range': 'Variação diária',
-                            'Range_pct': 'Variação diária'}
-                )        
-                st.plotly_chart(fig)
 
 if __name__ == "__main__":
     main()
