@@ -1,10 +1,7 @@
 import streamlit as st
-
 from comps.app_header import app_header
 app_header()
 
-#st.title('Ranginator')
-#st.image()
 st.header('Estudo do movimento do preço')
 st.markdown('**Home**: Esta página.')
 st.markdown('**Daily**: valores e percentuais dos movimentos diários completos.')

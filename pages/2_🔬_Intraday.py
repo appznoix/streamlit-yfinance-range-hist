@@ -37,10 +37,11 @@ def page_header():
     symbol = st.sidebar.text_input(
         'Informe o código do ativo: ',"", placeholder= 'Ex: PETR4')
     st.sidebar.markdown(
-        format_link('🍒 Use o formato ', 'Yahoo Finance',
-                    'https://br.financas.yahoo.com'),
+        format_link(
+            '🍒 Use o formato ', 
+            'Yahoo Finance',
+            'https://br.financas.yahoo.com'),
         unsafe_allow_html=True)
-    # Periodo de tempo considerado
 
     # Periodo de tempo considerado
     period = st.sidebar.radio(

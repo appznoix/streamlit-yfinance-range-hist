@@ -1,18 +1,14 @@
 ###################################################################
 # Imports e inits                                                 #
 ###################################################################
-#from time import time
 import streamlit as st
 import yfinance as yf
 import pandas as pd
-#import numpy as np
-#import plotly.express as px
 
 ###################################################################
 # Funções / Functions                                             #
 ###################################################################
-
-@st.cache(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True, show_spinner=False)
 def yf_safe_dataframe(symbol='usdbrl=x', period='1y', interval='1d'):
     '''Retorna dataframe com dados do Yahoo Finance sobre o ativo symbol'''
     d = yf_get_data(symbol, period, interval)

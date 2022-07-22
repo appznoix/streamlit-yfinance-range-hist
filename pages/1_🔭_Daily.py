@@ -27,8 +27,10 @@ def page_header():
     symbol = st.sidebar.text_input(
         'Informe o código do ativo: ',"", placeholder= 'Ex: PETR4')
     st.sidebar.markdown(
-        format_link('🍒 Use o formato ', 'Yahoo Finance',
-                    'https://br.financas.yahoo.com'),
+        format_link(
+            '🍒 Use o formato ', 
+            'Yahoo Finance',
+            'https://br.financas.yahoo.com'),
         unsafe_allow_html=True)
     # Periodo de tempo considerado
     period = st.sidebar.radio(
@@ -52,8 +54,7 @@ def main():
     # Mostra o cabeçalho da página e mostra o formulário de detalhes do gráfico
     symbol, display, period, interval, display_title = page_header() #symbol é o ativo, display é o formato númerico ou percentual
     # Corpo da página 
-    body_range_histogram(symbol, display, period, interval, display_title )
-
+    body_range_histogram(symbol, display, period, interval, display_title)
 
 if __name__ == "__main__":
     main()
