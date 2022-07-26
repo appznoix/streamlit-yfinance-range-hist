@@ -1,10 +1,10 @@
 ###################################################################
 # Imports e inits                                                 #
 ###################################################################
-import streamlit as st
-from comps.app_header import app_header    # cabeçalho da página
+#import streamlit as st
+#from comps.app_header import app_header    # cabeçalho da página
 from comps.mix_vanilla import format_link
-from comps.mix_flavours import body_range_histogram
+from comps.mix_flavours import body_range_histogram, app_header, st
 ###################################################################
 # Funções personalizadas / Custom Functions                       #
 ###################################################################

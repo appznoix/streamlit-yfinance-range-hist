@@ -1,10 +1,10 @@
 ###################################################################
 # Imports e inits                                                 #
 ###################################################################
-import streamlit as st
-from comps.app_header import app_header    # cabeçalho da página
+#import streamlit as st
+#from comps.app_header import app_header    # cabeçalho da página
 from comps.mix_vanilla import format_link
-from comps.mix_flavours import body_range_histogram
+from comps.mix_flavours import body_range_histogram, app_header, st
 
 ###################################################################
 # Funções / Functions                                             #
@@ -59,8 +59,9 @@ def page_header():
         ('Range', 'Range_pct'),
         format_func=lambda x: options.get(x),)
     # Informações sobre o contexto
-    return symbol, display, period, interval, (f'Variação {(options.get(display).lower())} (range) de {symbol.upper()} no tempo gráfico de {valid_timeframes.get(interval).lower()} pelo período de {valid_periods.get(period).lower()}')
-    
+    #multiplier = st.sidebar.slider('Multiplicador', min_value=1, max_value=6, value=1, step=1)
+    return symbol, display, period, interval, (f'Variação {(options.get(display).lower())} (range) de {symbol.upper()} no tempo gráfico de {valid_timeframes.get(interval).lower()} pelo período de {valid_periods.get(period).lower()}') #, multiplier
+
 ###################################################################
 # Código Principal / Main Code                                    #
 ###################################################################
@@ -69,8 +70,9 @@ def main():
     app_header()
     # cabeçalho da página e formulário de detalhes do gráfico
     symbol, display, period, interval, display_title = page_header() #symbol é o ativo, display é o formato númerico ou percentual
+    #symbol, display, period, interval, display_title, multiplier = page_header() #symbol é o ativo, display é o formato númerico ou percentual
     # Corpo da página
-    body_range_histogram(symbol, display, period, interval, display_title )
+    body_range_histogram(symbol, display, period, interval, display_title) ##, multiplier )
 
 if __name__ == "__main__":
     main()
