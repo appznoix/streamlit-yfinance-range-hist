@@ -1,9 +1,7 @@
 ###################################################################
 # Imports e inits                                                 #
 ###################################################################
-#import streamlit as st
-#from comps.app_header import app_header    # cabeçalho da página
-from comps.mix_vanilla import format_link
+from comps.mix_vanilla import yf_link
 from comps.mix_flavours import body_range_histogram, app_header, st
 ###################################################################
 # Funções personalizadas / Custom Functions                       #
@@ -26,12 +24,7 @@ def page_header():
     # Código do ativo
     symbol = st.sidebar.text_input(
         'Informe o código do ativo: ',"", placeholder= 'Ex: PETR4')
-    st.sidebar.markdown(
-        format_link(
-            '🍒 Use o formato ', 
-            'Yahoo Finance',
-            'https://br.financas.yahoo.com'),
-        unsafe_allow_html=True)
+    st.sidebar.markdown(yf_link(), unsafe_allow_html=True)
     # Periodo de tempo considerado
     period = st.sidebar.radio(
         "Consultar período de: ",

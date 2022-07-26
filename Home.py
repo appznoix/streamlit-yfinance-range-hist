@@ -29,5 +29,7 @@ if __name__ == "__main__":
 # ✔ 5. otimizar código
 # ✔ 6. colocar o numero de itens do dataframe 
 # ✔ 7. fazer o numero de bins igual ao de linhas do dataframe
-# 8. conferir os calculos de intraday
+# ✔ 8. conferir os calculos de intraday
+# ✔ 9. generalização do código (abstraindo fonte dos dados)
+#   10. versão metatrader
 ################################################################

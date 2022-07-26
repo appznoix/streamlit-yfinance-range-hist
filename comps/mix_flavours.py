@@ -1,54 +1,55 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from comps.yf_appznoix import yf_safe_symbol, yf_safe_dataframe
+from comps.yf_appznoix import exist_symbol, symbol_dataframe
 from comps.mix_vanilla import chart_summary, cooking_range
 
 #############################################
 # Funções que precisam importar módulos     #
 ############################################# 
-def body_range_histogram(symbol, display, period, interval, display_title): ##, multiplier = 1):
-    # Mostra o cabeçalho da página e mostra o formulário de detalhes do gráfico
+def app_header(app_title = 'Ranginator', app_header = 'O tamanho do movimento', app_image_file = 'img/clipart2812051.png', app_image_width = 100):
+    ''' Exibe o cabeçalho do aplicativo. Neste caso, duas colunas com nome, slogan e imagem '''
+
+    col1, col2 = st.columns(2)# cria duas columas, uma para o titulo e outra para a ilustração
+
+    with col1:
+        st.title(app_title)    
+        st.text(app_header)
+
+    with col2:
+        st.image(app_image_file, width=app_image_width)
+
+def body_range_histogram(symbol, display, period, interval, display_title): 
+    ''' Processa os dados e exibe o gráfico. Esta função é o coração do app'''
+
+    # Se não receber um ativo, mostra como informar o simbolo e retorna
     if not symbol:
         st.markdown('Na coluna à esquerda, informe o código do ativo que você quer ver.')
         st.markdown('Toque no botão `>` que aparece no topo, para ver a coluna lateral.')
         return
-    #else:
-    # Busca os dados e cria dataframe    
-    #if not not symbol: # processa o gráfico se algum ativo foi informado
-    df = pd.DataFrame()
     
-    safe_symbol,symbol = yf_safe_symbol(symbol) # verifica existencia do simbolo informado
-
-    if safe_symbol: # se existir, busca os dados do ativo e cria o DataFrame
-        with st.spinner(text="Aguarde coleta dos dados. Pode demorar alguns minutos"):
-            df = yf_safe_dataframe(symbol=symbol, period=period, interval=interval)
+    df = pd.DataFrame() # dataframe vazio
     
-        if cooking_range(df): ##, multiplier): # se o dataframe não estiver vazio, processa os dados e exibe o gráfico
-            st.title(display_title)
-            bins_chart, summary = chart_summary(df, display)
-            st.write(summary)
-            
-            #st.write(df) # for debugging
+    # Busca os dados e determina o codigo do ativo e se existe
+    safe_symbol,symbol = exist_symbol(symbol) # verifica existência do simbolo informado
 
-            fig = px.histogram(
-                df,
-                x=display,
-                nbins=bins_chart,
-                labels={'Range': 'Variação Númerica',
-                        'Range_pct': 'Variação Percentual'}
-            )        
-            st.plotly_chart(fig)
-    else:
+    if not safe_symbol: # não foi encontrado ativo com o código informado
         st.write('Ops! Não encontramos informações deste ativo. O código pode não existir, ter sido mudado ou desativado. Confira e tente novamente.')
+        return
 
-def app_header():
-    # cria duas columas, uma para o titulo e outra para a ilustração
-    col1, col2 = st.columns(2)
+    # busca os dados e cria dataframe    
+    with st.spinner(text="Aguarde coleta dos dados. Pode demorar alguns minutos"):
+        df = symbol_dataframe(symbol=symbol, period=period, interval=interval)
 
-    with col1:
-        st.title("Ranginator")    
-        st.text("O tamanho do movimento")
-
-    with col2:
-        st.image("img/clipart2812051.png", width=100)
+    if cooking_range(df): ##, multiplier): # se o dataframe não estiver vazio, processa os dados e exibe o gráfico
+        st.title(display_title)
+        bins_chart, summary = chart_summary(df, display)
+        st.write(summary)                   #st.write(df) # for debugging
+        fig = px.histogram(
+            df,
+            x=display,
+            nbins=bins_chart,
+            labels={'Range': 'Variação Númerica',
+                    'Range_pct': 'Variação Percentual'}
+        )        
+        st.plotly_chart(fig)

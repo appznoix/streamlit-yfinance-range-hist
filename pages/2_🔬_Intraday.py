@@ -1,9 +1,7 @@
 ###################################################################
 # Imports e inits                                                 #
 ###################################################################
-#import streamlit as st
-#from comps.app_header import app_header    # cabeçalho da página
-from comps.mix_vanilla import format_link
+from comps.mix_vanilla import yf_link
 from comps.mix_flavours import body_range_histogram, app_header, st
 
 ###################################################################
@@ -36,12 +34,7 @@ def page_header():
     # Código do ativo
     symbol = st.sidebar.text_input(
         'Informe o código do ativo: ',"", placeholder= 'Ex: PETR4')
-    st.sidebar.markdown(
-        format_link(
-            '🍒 Use o formato ', 
-            'Yahoo Finance',
-            'https://br.financas.yahoo.com'),
-        unsafe_allow_html=True)
+    st.sidebar.markdown(yf_link(), unsafe_allow_html=True)
 
     # Periodo de tempo considerado
     period = st.sidebar.radio(
@@ -59,8 +52,7 @@ def page_header():
         ('Range', 'Range_pct'),
         format_func=lambda x: options.get(x),)
     # Informações sobre o contexto
-    #multiplier = st.sidebar.slider('Multiplicador', min_value=1, max_value=6, value=1, step=1)
-    return symbol, display, period, interval, (f'Variação {(options.get(display).lower())} (range) de {symbol.upper()} no tempo gráfico de {valid_timeframes.get(interval).lower()} pelo período de {valid_periods.get(period).lower()}') #, multiplier
+    return symbol, display, period, interval, (f'Variação {(options.get(display).lower())} (range) de {symbol.upper()} no tempo gráfico de {valid_timeframes.get(interval).lower()} pelo período de {valid_periods.get(period).lower()}') 
 
 ###################################################################
 # Código Principal / Main Code                                    #
@@ -68,9 +60,8 @@ def page_header():
 def main():
     # cabeçalho do app
     app_header()
-    # cabeçalho da página e formulário de detalhes do gráfico
+    # Exibe formulário de detalhes do gráfico
     symbol, display, period, interval, display_title = page_header() #symbol é o ativo, display é o formato númerico ou percentual
-    #symbol, display, period, interval, display_title, multiplier = page_header() #symbol é o ativo, display é o formato númerico ou percentual
     # Corpo da página
     body_range_histogram(symbol, display, period, interval, display_title) ##, multiplier )
 
