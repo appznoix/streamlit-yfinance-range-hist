@@ -1,5 +1,3 @@
-#import streamlit as st
-#from comps.app_header import app_header
 from comps.mix_flavours import app_header, st
 
 def main():

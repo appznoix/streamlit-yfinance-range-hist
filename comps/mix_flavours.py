@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from comps.yf_appznoix import exist_symbol, symbol_dataframe
+from comps.yf_appznoix import check_symbol, get_symbol_data
 from comps.mix_vanilla import chart_summary, cooking_range
 
 #############################################
@@ -28,18 +28,19 @@ def body_range_histogram(symbol, display, period, interval, display_title):
         st.markdown('Toque no botão `>` que aparece no topo, para ver a coluna lateral.')
         return
     
-    df = pd.DataFrame() # dataframe vazio
     
     # Busca os dados e determina o codigo do ativo e se existe
-    safe_symbol,symbol = exist_symbol(symbol) # verifica existência do simbolo informado
+    safe_symbol, symbol = check_symbol(symbol) # verifica existência do simbolo informado
 
     if not safe_symbol: # não foi encontrado ativo com o código informado
         st.write('Ops! Não encontramos informações deste ativo. O código pode não existir, ter sido mudado ou desativado. Confira e tente novamente.')
         return
 
-    # busca os dados e cria dataframe    
+    df = pd.DataFrame() # dataframe vazio
+
+    # busca os dados e cria dataframe
     with st.spinner(text="Aguarde coleta dos dados. Pode demorar alguns minutos"):
-        df = symbol_dataframe(symbol=symbol, period=period, interval=interval)
+        df = get_symbol_data(symbol=symbol, period=period, interval=interval)
 
     if cooking_range(df): ##, multiplier): # se o dataframe não estiver vazio, processa os dados e exibe o gráfico
         st.title(display_title)
