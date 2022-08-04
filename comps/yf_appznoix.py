@@ -1,7 +1,6 @@
 ###################################################################
 # Imports e inits                                                 #
 ###################################################################
-import re
 import streamlit as st
 import yfinance as yf
 import pandas as pd
@@ -34,7 +33,7 @@ def check_symbol(symbol):
 @st.cache(show_spinner=False)
 def search_symbol(symbol):
     ''' Retorna True se symbol existe'''
-    with st.spinner(text=f'Buscando {symbol.upper()}'):
+    with st.spinner(text=f'Buscando informações de {symbol.upper()}'):
         found = valid_symbol(symbol)
     return found
 
