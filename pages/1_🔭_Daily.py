@@ -44,7 +44,7 @@ def page_header():
 def main():
     # cabeçalho do app
     app_header()
-    # Mostra o cabeçalho da página e mostra o formulário de detalhes do gráfico
+    # Mostra o cabeçalho da página e o formulário de detalhes do gráfico
     symbol, display, period, interval, display_title = page_header() #symbol é o ativo, display é o formato númerico ou percentual
     # Corpo da página 
     body_range_histogram(symbol, display, period, interval, display_title)

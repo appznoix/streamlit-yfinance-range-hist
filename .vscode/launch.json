@@ -8,7 +8,7 @@
             "name": "Streamliki",
             "type": "python",
             "request": "launch",
-            "program": "C://ProgramData//Anaconda3//Scripts//streamlit.exe",
+            "program": "D://ProgramData//Anaconda3//Scripts//streamlit.exe",
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": ["run", "Home.py"]

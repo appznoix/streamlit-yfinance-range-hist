@@ -33,12 +33,25 @@ def check_symbol(symbol):
 @st.cache(show_spinner=False)
 def search_symbol(symbol):
     ''' Retorna True se symbol existe'''
+
     with st.spinner(text=f'Buscando informações de {symbol.upper()}'):
+        print(symbol)
         found = valid_symbol(symbol)
     return found
 
 @st.cache(show_spinner=False)
 def valid_symbol(symbol):
     '''Retorna true se Yahoo Finance tem informações sobre o ativo *symbol*'''
-    s = yf.Ticker(symbol)
-    return not (s.info['regularMarketPrice'] == None)
+    s = yf.Ticker(symbol).fast_info
+    try:
+        exist = s.exchange
+    except:
+        return False
+
+    return True
+        
+    #print(s.fast_info['last_price'])
+    #y =s.fast_info.year_low
+    #print(y)
+    #return y > 0
+    #return not (s.info['regularMarketPrice'] == None)
